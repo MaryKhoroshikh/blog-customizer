@@ -25,6 +25,8 @@ type TextProps = {
 	family?: FontFamiliesClasses;
 	/** Булевая пропса, делает динамическим только семью шрифтов и цвет */
 	dynamicLite?: boolean;
+	/** Булевая пропса, добавляет паддинг */
+	padding?: boolean;
 };
 
 export const Text = ({
