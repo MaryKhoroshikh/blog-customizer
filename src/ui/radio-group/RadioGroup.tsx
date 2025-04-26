@@ -21,7 +21,7 @@ export const RadioGroup = (props: RadioGroupProps) => {
 		<div className={styles.container}>
 			{title && (
 				<>
-					<Text weight={800} size={12} uppercase padding>
+					<Text weight={800} size={12} uppercase>
 						{title}
 					</Text>
 				</>

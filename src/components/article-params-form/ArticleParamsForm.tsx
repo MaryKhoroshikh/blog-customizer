@@ -7,12 +7,13 @@ import {
 	ArticleStateType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
-import { SyntheticEvent, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Select } from 'src/ui/select';
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
@@ -31,7 +32,7 @@ export const ArticleParamsForm = ({
 	onClose,
 }: ArticleParamsFormProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [selectedArticleState, setSelectedArticleState] =
 		useState<ArticleStateType>(articleState);
 
@@ -41,48 +42,53 @@ export const ArticleParamsForm = ({
 	) => {
 		setSelectedArticleState({ ...selectedArticleState, [key]: value });
 	};
-	const handleDefaultArticleState = () => {
-		setSelectedArticleState(articleState);
+	const handleResetArticleState = () => {
+		setSelectedArticleState(defaultArticleState);
+		setArticleState(defaultArticleState);
 	};
 
-	const handleSubmitArticleState = (e: SyntheticEvent) => {
+	const handleSubmitArticleState = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setArticleState(selectedArticleState);
 	};
 
 	useOutsideClickClose({
-		isOpen,
+		isOpen: isSidebarOpen,
 		rootRef,
 		onClose,
-		onChange: setIsOpen,
+		onChange: setIsSidebarOpen,
 	});
 
 	return (
 		<>
 			<ArrowButton
-				isOpen={isOpen}
+				isOpen={isSidebarOpen}
 				onClick={() => {
-					setIsOpen(!isOpen);
+					setIsSidebarOpen(!isSidebarOpen);
 				}}
 			/>
 			<aside
-				className={clsx(styles.container, isOpen && styles.container_open)}
+				className={clsx(
+					styles.container,
+					isSidebarOpen && styles.container_open
+				)}
 				ref={rootRef}>
-				<form className={styles.form} onSubmit={handleSubmitArticleState}>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmitArticleState}
+					onReset={handleResetArticleState}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
 
-					<Text as='label' size={12} weight={800} uppercase padding>
-						Шрифт
-						<Select
-							selected={selectedArticleState.fontFamilyOption}
-							options={fontFamilyOptions}
-							onChange={(options) =>
-								handleChangeSelectedState('fontFamilyOption', options)
-							}
-						/>
-					</Text>
+					<Select
+						title='Шрифт'
+						selected={selectedArticleState.fontFamilyOption}
+						options={fontFamilyOptions}
+						onChange={(options) =>
+							handleChangeSelectedState('fontFamilyOption', options)
+						}
+					/>
 
 					<RadioGroup
 						name='fontSizeOptions'
@@ -94,50 +100,37 @@ export const ArticleParamsForm = ({
 						title='Размер шрифта'
 					/>
 
-					<Text as='label' size={12} weight={800} uppercase padding>
-						Цвет шрифта
-						<Select
-							selected={selectedArticleState.fontColor}
-							options={fontColors}
-							onChange={(options) =>
-								handleChangeSelectedState('fontColor', options)
-							}
-						/>
-					</Text>
+					<Select
+						title='Цвет шрифта'
+						selected={selectedArticleState.fontColor}
+						options={fontColors}
+						onChange={(options) =>
+							handleChangeSelectedState('fontColor', options)
+						}
+					/>
 
-					<Text padding>
-						<Separator />
-					</Text>
+					<Separator />
 
-					<Text as='label' size={12} weight={800} uppercase padding>
-						Цвет фона
-						<Select
-							selected={selectedArticleState.backgroundColor}
-							options={backgroundColors}
-							onChange={(options) =>
-								handleChangeSelectedState('backgroundColor', options)
-							}
-						/>
-					</Text>
+					<Select
+						title='Цвет фона'
+						selected={selectedArticleState.backgroundColor}
+						options={backgroundColors}
+						onChange={(options) =>
+							handleChangeSelectedState('backgroundColor', options)
+						}
+					/>
 
-					<Text as='label' size={12} weight={800} uppercase padding>
-						Ширина контента
-						<Select
-							selected={selectedArticleState.contentWidth}
-							options={contentWidthArr}
-							onChange={(options) =>
-								handleChangeSelectedState('contentWidth', options)
-							}
-						/>
-					</Text>
+					<Select
+						title='Ширина контента'
+						selected={selectedArticleState.contentWidth}
+						options={contentWidthArr}
+						onChange={(options) =>
+							handleChangeSelectedState('contentWidth', options)
+						}
+					/>
 
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleDefaultArticleState}
-						/>
+						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>

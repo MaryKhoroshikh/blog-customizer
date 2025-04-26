@@ -40,7 +40,6 @@ export const Text = ({
 	align = 'left',
 	family = 'open-sans',
 	dynamicLite = false,
-	padding = false,
 }: TextProps) => {
 	const className = clsx(
 		styles.text,
@@ -51,8 +50,7 @@ export const Text = ({
 		{ [styles.uppercase]: uppercase },
 		styles[`${align}`],
 		styles[`${family}`],
-		{ [styles.dynamicLite]: dynamicLite },
-		{ [styles.padding]: padding }
+		{ [styles.dynamicLite]: dynamicLite }
 	);
 	return <Tag className={className}>{children}</Tag>;
 };
